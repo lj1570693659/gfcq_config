@@ -1,0 +1,15 @@
+# GoFrame CLI tool configuration.
+gfcli:
+  gen:
+    dao:
+      - link: "mysql:root:123456@tcp(127.0.0.1:3306)/cqgf_product"
+        tables: "cqgf_product_budget_access,cqgf_product_level_assess,cqgf_product_level_confirm,cqgf_product_mode,cqgf_product_mode_stage,cqgf_product_roles,cqgf_product_stage_radio,cqgf_product_type,cqgf_crew_duty_index,cqgf_crew_hours_index,cqgf_crew_kpi_rule,cqgf_crew_manage_index,cqgf_crew_overtime_rule,cqgf_crew_solve_rule"
+        removePrefix: "cqgf_"
+        path: "./internal"
+        descriptionTag: true
+        noModelComment: true
+        jsonCase: "CamelLower"
+
+    system:
+      - link: "mysql:root:123456@tcp(127.0.0.1:3306)/cqgf_product"
+        tables: "cqgf_product_budget_access,cqgf_product_level_assess,cqgf_product_level_confirm,cqgf_product_mode,cqgf_product_mode_stage,cqgf_product_roles,cqgf_product_stage_radio,cqgf_product_type,cqgf_crew_duty_index,cqgf_crew_hours_index,cqgf_crew_kpi_rule,cqgf_crew_manage_index,cqgf_crew_overtime_rule,cqgf_crew_solve_rule"
