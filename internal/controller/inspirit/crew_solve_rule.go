@@ -23,6 +23,12 @@ func (s *CrewSolveRuleController) GetList(ctx context.Context, in *v1.GetListCre
 	return res, err
 }
 
+// GetAll implements GetAll
+func (s *CrewSolveRuleController) GetAll(ctx context.Context, in *v1.GetAllCrewSolveRuleReq) (*v1.GetAllCrewSolveRuleRes, error) {
+	res, err := service.CrewSolveRule().GetAll(ctx, in)
+	return res, err
+}
+
 func (s *CrewSolveRuleController) GetOne(ctx context.Context, in *v1.GetOneCrewSolveRuleReq) (*v1.GetOneCrewSolveRuleRes, error) {
 	res, err := service.CrewSolveRule().GetOne(ctx, in)
 	return res, err

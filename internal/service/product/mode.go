@@ -10,6 +10,7 @@ type (
 		Create(ctx context.Context, info *v1.CreateModeReq) (*v1.CreateModeRes, error)
 		GetOne(ctx context.Context, info *v1.GetOneModeReq) (*v1.GetOneModeRes, error)
 		GetList(ctx context.Context, info *v1.GetListModeReq) (*v1.GetListModeRes, error)
+		GetAll(ctx context.Context, info *v1.GetAllModeReq) (*v1.GetAllModeRes, error)
 		Modify(ctx context.Context, info *v1.ModifyModeReq) (*v1.ModifyModeRes, error)
 		Delete(ctx context.Context, id int32) (isSuccess bool, msg string, err error)
 	}

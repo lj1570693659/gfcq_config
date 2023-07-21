@@ -10,6 +10,7 @@ type (
 		Create(ctx context.Context, info *v1.CreateBudgetAssessReq) (*v1.CreateBudgetAssessRes, error)
 		GetOne(ctx context.Context, info *v1.GetOneBudgetAssessReq) (*v1.GetOneBudgetAssessRes, error)
 		GetList(ctx context.Context, info *v1.GetListBudgetAssessReq) (*v1.GetListBudgetAssessRes, error)
+		GetAll(ctx context.Context, info *v1.GetAllBudgetAssessReq) (*v1.GetAllBudgetAssessRes, error)
 		Modify(ctx context.Context, info *v1.ModifyBudgetAssessReq) (*v1.ModifyBudgetAssessRes, error)
 		Delete(ctx context.Context, id int32) (isSuccess bool, msg string, err error)
 	}

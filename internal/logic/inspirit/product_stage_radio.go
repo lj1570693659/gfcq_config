@@ -9,6 +9,7 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gconv"
+	"github.com/lj1570693659/gfcq_config/internal/consts"
 	"github.com/lj1570693659/gfcq_config/internal/dao"
 	"github.com/lj1570693659/gfcq_config/internal/library"
 	"github.com/lj1570693659/gfcq_config/internal/model/do"
@@ -129,6 +130,40 @@ func (s *sStageRadio) GetList(ctx context.Context, in *v1.GetListStageRadioReq) 
 	return res, err
 }
 
+func (s *sStageRadio) GetAll(ctx context.Context, in *v1.GetAllStageRadioReq) (*v1.GetAllStageRadioRes, error) {
+	res := &v1.GetAllStageRadioRes{}
+	resData := make([]*v1.StageRadioInfo, 0)
+	budgetEntity := make([]entity.ProductStageRadio, 0)
+
+	query := dao.ProductStageRadio.Ctx(ctx)
+
+	// 评价标准
+	// 浮动比例
+	if in.GetStageRadio().GetQuotaRadio() > 0 {
+		query = query.Where(dao.ProductStageRadio.Columns().QuotaRadio, in.GetStageRadio().GetQuotaRadio())
+	}
+	if in.GetStageRadio().GetScoreMin() > 0 {
+		query = query.Where(dao.ProductStageRadio.Columns().ScoreMin, in.GetStageRadio().GetScoreMin())
+	}
+	if in.GetStageRadio().GetScoreMax() > 0 {
+		query = query.Where(dao.ProductStageRadio.Columns().ScoreMax, in.GetStageRadio().GetScoreMax())
+	}
+	if in.GetStageRadio().GetSid() > 0 {
+		query = query.Where(dao.ProductStageRadio.Columns().Sid, in.GetStageRadio().GetSid())
+	}
+	// 备注
+	if len(in.GetStageRadio().GetRemark()) > 0 {
+		query = query.Where(fmt.Sprintf("%s like ?", dao.ProductStageRadio.Columns().Remark), g.Slice{fmt.Sprintf("%s%s", in.GetStageRadio().GetRemark(), "%")})
+	}
+
+	err := query.Scan(&budgetEntity)
+
+	levelEntityByte, _ := json.Marshal(budgetEntity)
+	json.Unmarshal(levelEntityByte, &resData)
+	res.Data = resData
+	return res, err
+}
+
 func (s *sStageRadio) Modify(ctx context.Context, in *v1.ModifyStageRadioReq) (*v1.ModifyStageRadioRes, error) {
 	res := &v1.ModifyStageRadioRes{StageRadio: &v1.StageRadioInfo{}}
 	if g.IsEmpty(in.GetId()) {
@@ -177,6 +212,44 @@ func (s *sStageRadio) Delete(ctx context.Context, id int32) (isSuccess bool, msg
 	return true, "", nil
 }
 
+func (s *sStageRadio) GetQuotaRadioByScore(ctx context.Context, in *v1.GetQuotaRadioByScoreReq) (*v1.GetQuotaRadioByScoreRes, error) {
+	res := &v1.GetQuotaRadioByScoreRes{}
+	if g.IsEmpty(in.Score) {
+		return res, errors.New("接收到的得分为空")
+	}
+
+	allScore, err := s.GetAll(ctx, &v1.GetAllStageRadioReq{})
+	if !g.IsNil(err) {
+		return res, err
+	}
+	if len(allScore.GetData()) == 0 {
+		return res, errors.New("请先完善应发激励占比配置信息")
+	}
+	for _, v := range allScore.GetData() {
+		switch v.ScoreRange {
+		case consts.ScoreRangeMin:
+			// 左闭右开
+			if v.ScoreMin <= in.Score && in.Score < v.ScoreMax {
+				res.QuotaRadio = v.GetQuotaRadio()
+				break
+			}
+		case consts.ScoreRangeMax:
+			// 左开右闭
+			if v.ScoreMin < in.Score && in.Score <= v.ScoreMax {
+				res.QuotaRadio = v.GetQuotaRadio()
+				break
+			}
+		case consts.ScoreRangeMinMax:
+			// 左闭右闭
+			if v.ScoreMin <= in.Score && in.Score <= v.ScoreMax {
+				res.QuotaRadio = v.GetQuotaRadio()
+				break
+			}
+		}
+	}
+	return res, nil
+}
+
 func (s *sStageRadio) GetOneByCondition(ctx context.Context, condition g.Map) (*entity.ProductStageRadio, error) {
 	info := &entity.ProductStageRadio{}
 	err := dao.ProductStageRadio.Ctx(ctx).Where(condition).Scan(info)
@@ -193,13 +266,16 @@ func (s *sStageRadio) checkInputData(ctx context.Context, in *v1.StageRadioInfo)
 	min := library.Decimal(gconv.Float64(in.GetScoreMin()))
 	max := library.Decimal(gconv.Float64(in.GetScoreMax()))
 	if min < 0 {
-		return in, errors.New("得分下限不能小于0")
+		return in, errors.New("评分下限不能小于0")
 	}
 	if max > 100 {
-		return in, errors.New("得分上限不能大于100")
+		return in, errors.New("评分上限不能大于100")
 	}
 	if min > max {
-		return in, errors.New("得分下限不能超过上限")
+		return in, errors.New("评分下限不能超过上限")
+	}
+	if in.GetScoreRange().Number() != consts.ScoreRangeMin && in.GetScoreRange().Number() != consts.ScoreRangeMax && in.GetScoreRange().Number() != consts.ScoreRangeMinMax {
+		return in, errors.New("评分区间包含关系错误")
 	}
 
 	return in, nil

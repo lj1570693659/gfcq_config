@@ -119,6 +119,37 @@ func (s *sCrewManageIndex) GetList(ctx context.Context, in *v1.GetListCrewManage
 	return res, err
 }
 
+func (s *sCrewManageIndex) GetAll(ctx context.Context, in *v1.GetAllCrewManageIndexReq) (*v1.GetAllCrewManageIndexRes, error) {
+	res := &v1.GetAllCrewManageIndexRes{}
+	resData := make([]*v1.CrewManageIndexInfo, 0)
+	budgetEntity := make([]entity.CrewManageIndex, 0)
+
+	query := dao.CrewManageIndex.Ctx(ctx)
+
+	// 评价标准
+	if in.GetCrewManageIndex().GetScoreIndex() > 0 {
+		query = query.Where(dao.CrewManageIndex.Columns().ScoreIndex, in.GetCrewManageIndex().GetScoreIndex())
+	}
+	if in.GetCrewManageIndex().GetProductRoleId() > 0 {
+		query = query.Where(dao.CrewManageIndex.Columns().ProductRoleId, in.GetCrewManageIndex().GetProductRoleId())
+	}
+	// 主键查询
+	if in.GetCrewManageIndex().GetId() > 0 {
+		query = query.Where(dao.CrewManageIndex.Columns().Id, in.GetCrewManageIndex().GetId())
+	}
+	// 备注
+	if len(in.GetCrewManageIndex().GetRemark()) > 0 {
+		query = query.Where(fmt.Sprintf("%s like ?", dao.CrewManageIndex.Columns().Remark), g.Slice{fmt.Sprintf("%s%s", in.GetCrewManageIndex().GetRemark(), "%")})
+	}
+
+	err := query.Scan(&budgetEntity)
+
+	levelEntityByte, _ := json.Marshal(budgetEntity)
+	json.Unmarshal(levelEntityByte, &resData)
+	res.Data = resData
+	return res, err
+}
+
 func (s *sCrewManageIndex) Modify(ctx context.Context, in *v1.ModifyCrewManageIndexReq) (*v1.ModifyCrewManageIndexRes, error) {
 	res := &v1.ModifyCrewManageIndexRes{CrewManageIndex: &v1.CrewManageIndexInfo{}}
 	if g.IsEmpty(in.GetId()) {

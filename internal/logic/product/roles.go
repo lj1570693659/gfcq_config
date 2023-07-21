@@ -126,6 +126,42 @@ func (s *sRoles) GetList(ctx context.Context, in *v1.GetListRolesReq) (*v1.GetLi
 	return res, err
 }
 
+func (s *sRoles) GetAll(ctx context.Context, in *v1.GetAllRolesReq) (*v1.GetAllRolesRes, error) {
+	res := &v1.GetAllRolesRes{
+		Data: make([]*v1.RolesInfo, 0),
+	}
+	resData := make([]*v1.RolesInfo, 0)
+	confirmEntity := make([]entity.ProductRoles, 0)
+
+	query := dao.ProductRoles.Ctx(ctx)
+
+	// 角色名称
+	if len(in.GetRoles().GetName()) > 0 {
+		query = query.Where(fmt.Sprintf("%s like ?", dao.ProductRoles.Columns().Name), g.Slice{fmt.Sprintf("%s%s", in.GetRoles().GetName(), "%")})
+	}
+	// 角色与职责说明
+	if len(in.GetRoles().GetExplain()) > 0 {
+		query = query.Where(fmt.Sprintf("%s like ?", dao.ProductRoles.Columns().Explain), g.Slice{fmt.Sprintf("%s%s", in.GetRoles().GetExplain(), "%")})
+	}
+	// 主键查询
+	if in.GetRoles().GetId() > 0 {
+		query = query.Where(dao.ProductRoles.Columns().Id, in.GetRoles().GetId())
+	}
+	// 上级角色
+	if in.GetRoles().GetPid() > 0 {
+		query = query.Where(dao.ProductRoles.Columns().Pid, in.GetRoles().GetPid())
+	} else if in.GetRoles().GetPid() == -1 {
+		query = query.Where(dao.ProductRoles.Columns().Pid, 0)
+	}
+
+	err := query.Scan(&confirmEntity)
+
+	levelEntityByte, _ := json.Marshal(confirmEntity)
+	json.Unmarshal(levelEntityByte, &resData)
+	res.Data = resData
+	return res, err
+}
+
 func (s *sRoles) Modify(ctx context.Context, in *v1.ModifyRolesReq) (*v1.ModifyRolesRes, error) {
 	res := &v1.ModifyRolesRes{Roles: &v1.RolesInfo{}}
 	if g.IsEmpty(in.GetId()) {

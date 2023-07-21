@@ -130,6 +130,39 @@ func (s *sBudgetAccess) GetList(ctx context.Context, in *v1.GetListBudgetAssessR
 	return res, err
 }
 
+func (s *sBudgetAccess) GetAll(ctx context.Context, in *v1.GetAllBudgetAssessReq) (*v1.GetAllBudgetAssessRes, error) {
+	res := &v1.GetAllBudgetAssessRes{}
+	resData := make([]*v1.BudgetAssessInfo, 0)
+	budgetEntity := make([]entity.ProductBudgetAccess, 0)
+
+	query := dao.ProductBudgetAccess.Ctx(ctx)
+
+	// 评价标准
+	if in.GetBudgetAssess().GetScoreMin() > 0 {
+		query = query.Where(dao.ProductBudgetAccess.Columns().ScoreMin, in.GetBudgetAssess().GetScoreMin())
+	}
+	if in.GetBudgetAssess().GetScoreMax() > 0 {
+		query = query.Where(dao.ProductBudgetAccess.Columns().ScoreMax, in.GetBudgetAssess().GetScoreMax())
+	}
+	if in.GetBudgetAssess().GetBudgetMin() > 0 {
+		query = query.Where(dao.ProductBudgetAccess.Columns().BudgetMin, in.GetBudgetAssess().GetBudgetMin())
+	}
+	if in.GetBudgetAssess().GetBudgetMax() > 0 {
+		query = query.Where(dao.ProductBudgetAccess.Columns().BudgetMax, in.GetBudgetAssess().GetBudgetMax())
+	}
+	// 主键
+	if len(in.GetBudgetAssess().GetRemark()) > 0 {
+		query = query.Where(fmt.Sprintf("%s like ?", dao.ProductBudgetAccess.Columns().Remark), g.Slice{fmt.Sprintf("%s%s", in.GetBudgetAssess().GetRemark(), "%")})
+	}
+
+	err := query.Scan(&budgetEntity)
+
+	levelEntityByte, _ := json.Marshal(budgetEntity)
+	json.Unmarshal(levelEntityByte, &resData)
+	res.Data = resData
+	return res, err
+}
+
 func (s *sBudgetAccess) Modify(ctx context.Context, in *v1.ModifyBudgetAssessReq) (*v1.ModifyBudgetAssessRes, error) {
 	res := &v1.ModifyBudgetAssessRes{BudgetAssess: &v1.BudgetAssessInfo{}}
 	if g.IsEmpty(in.GetId()) {
@@ -185,13 +218,17 @@ func (s *sBudgetAccess) checkInputData(ctx context.Context, in *v1.BudgetAssessI
 	if in.GetScoreMax() < 0 || in.GetScoreMax() > 100 {
 		return in, errors.New("评分上限不能小于0，且不能大于100")
 	}
+	if in.GetScoreMin() > in.GetScoreMax() {
+		return in, errors.New("评分下限不能大于上限")
+	}
 	if in.GetBudgetMin() < 0 || in.GetBudgetMax() < 0 {
 		return in, errors.New("激励预算不能小于0")
 	}
-	if in.GetScoreRange() != consts.ScoreRangeMin && in.GetScoreRange() != consts.ScoreRangeMax {
+
+	if in.GetScoreRange().Number() != consts.ScoreRangeMin && in.GetScoreRange().Number() != consts.ScoreRangeMax && in.GetScoreRange().Number() != consts.ScoreRangeMinMax {
 		return in, errors.New("评分区间包含关系错误")
 	}
-	if in.GetBudgetRange() != consts.ScoreRangeMin && in.GetBudgetRange() != consts.ScoreRangeMax {
+	if in.GetBudgetRange() != consts.ScoreRangeMin && in.GetBudgetRange() != consts.ScoreRangeMax && in.GetBudgetRange() != consts.ScoreRangeMinMax {
 		return in, errors.New("激励预算区间包含关系错误")
 	}
 

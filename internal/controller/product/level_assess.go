@@ -23,6 +23,12 @@ func (s *LevelAssessController) GetList(ctx context.Context, in *v1.GetListLevel
 	return res, err
 }
 
+// GetListWithoutPage implements GetListWithoutPage
+func (*LevelAssessController) GetListWithoutPage(ctx context.Context, in *v1.GetListWithoutLevelAssessReq) (*v1.GetListWithoutLevelAssessRes, error) {
+	res, err := product.LevelAssess().GetListWithoutPage(ctx, in)
+	return res, err
+}
+
 func (s *LevelAssessController) GetOne(ctx context.Context, in *v1.GetOneLevelAssessReq) (*v1.GetOneLevelAssessRes, error) {
 	res, err := product.LevelAssess().GetOne(ctx, in)
 	return res, err

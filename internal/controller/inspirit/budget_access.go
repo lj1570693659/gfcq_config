@@ -23,6 +23,12 @@ func (s *BudgetAccessController) GetList(ctx context.Context, in *v1.GetListBudg
 	return res, err
 }
 
+// GetAll implements GetAll
+func (s *BudgetAccessController) GetAll(ctx context.Context, in *v1.GetAllBudgetAssessReq) (*v1.GetAllBudgetAssessRes, error) {
+	res, err := service.BudgetAccess().GetAll(ctx, in)
+	return res, err
+}
+
 func (s *BudgetAccessController) GetOne(ctx context.Context, in *v1.GetOneBudgetAssessReq) (*v1.GetOneBudgetAssessRes, error) {
 	res, err := service.BudgetAccess().GetOne(ctx, in)
 	return res, err

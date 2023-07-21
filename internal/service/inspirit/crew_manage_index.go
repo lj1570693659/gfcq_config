@@ -10,6 +10,7 @@ type (
 		Create(ctx context.Context, info *v1.CreateCrewManageIndexReq) (*v1.CreateCrewManageIndexRes, error)
 		GetOne(ctx context.Context, info *v1.GetOneCrewManageIndexReq) (*v1.GetOneCrewManageIndexRes, error)
 		GetList(ctx context.Context, info *v1.GetListCrewManageIndexReq) (*v1.GetListCrewManageIndexRes, error)
+		GetAll(ctx context.Context, info *v1.GetAllCrewManageIndexReq) (*v1.GetAllCrewManageIndexRes, error)
 		Modify(ctx context.Context, info *v1.ModifyCrewManageIndexReq) (*v1.ModifyCrewManageIndexRes, error)
 		Delete(ctx context.Context, id int32) (isSuccess bool, msg string, err error)
 	}

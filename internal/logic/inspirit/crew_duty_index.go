@@ -125,6 +125,50 @@ func (s *sCrewDutyIndex) GetList(ctx context.Context, in *v1.GetListCrewDutyInde
 	return res, err
 }
 
+func (s *sCrewDutyIndex) GetAll(ctx context.Context, in *v1.GetAllCrewDutyIndexReq) (*v1.GetAllCrewDutyIndexRes, error) {
+	res := &v1.GetAllCrewDutyIndexRes{}
+	resData := make([]*v1.CrewDutyIndexInfo, 0)
+	budgetEntity := make([]entity.CrewDutyIndex, 0)
+
+	query := dao.CrewDutyIndex.Ctx(ctx)
+
+	// 评价标准
+	if in.GetCrewDutyIndex().GetScoreIndex() > 0 {
+		query = query.Where(dao.CrewDutyIndex.Columns().ScoreIndex, in.GetCrewDutyIndex().GetScoreIndex())
+	}
+	if in.GetCrewDutyIndex().GetJobLevelId() > 0 {
+		query = query.Where(dao.CrewDutyIndex.Columns().JobLevelId, in.GetCrewDutyIndex().GetJobLevelId())
+	}
+	if in.GetCrewDutyIndex().GetArith() != v1.ArithEnum_notSureArith {
+		query = query.Where(dao.CrewDutyIndex.Columns().Arith, in.GetCrewDutyIndex().GetArith())
+	}
+	// 主键查询
+	if in.GetCrewDutyIndex().GetId() > 0 {
+		query = query.Where(dao.CrewDutyIndex.Columns().Id, in.GetCrewDutyIndex().GetId())
+	}
+	// 主键
+	if len(in.GetCrewDutyIndex().GetRemark()) > 0 {
+		query = query.Where(fmt.Sprintf("%s like ?", dao.CrewDutyIndex.Columns().Remark), g.Slice{fmt.Sprintf("%s%s", in.GetCrewDutyIndex().GetRemark(), "%")})
+	}
+
+	err := query.Scan(&budgetEntity)
+	if len(budgetEntity) > 0 {
+		for _, v := range budgetEntity {
+			resData = append(resData, &v1.CrewDutyIndexInfo{
+				Id:         gconv.Int32(v.Id),
+				ScoreIndex: gconv.Uint32(v.ScoreIndex),
+				JobLevelId: gconv.Uint32(v.JobLevelId),
+				Arith:      v1.ArithEnum(v1.ArithEnum_value[v.Arith]),
+				Remark:     v.Remark,
+				CreateTime: v.CreateTime.String(),
+				UpdateTime: v.UpdateTime.String(),
+			})
+		}
+	}
+	res.Data = resData
+	return res, err
+}
+
 func (s *sCrewDutyIndex) Modify(ctx context.Context, in *v1.ModifyCrewDutyIndexReq) (*v1.ModifyCrewDutyIndexRes, error) {
 	res := &v1.ModifyCrewDutyIndexRes{CrewDutyIndex: &v1.CrewDutyIndexInfo{}}
 	if g.IsEmpty(in.GetId()) {

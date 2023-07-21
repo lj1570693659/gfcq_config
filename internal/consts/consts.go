@@ -5,6 +5,8 @@ const (
 	ScoreRangeMin = 1
 	// ScoreRangeMax 左开右闭
 	ScoreRangeMax = 2
+	// ScoreRangeMinMax 左闭右闭
+	ScoreRangeMinMax = 3
 	// IsNeedPm 需要委派PM
 	IsNeedPm = 1
 	// IsNotNeedPm 不需要委派PM

@@ -23,6 +23,12 @@ func (s *CrewDutyIndexController) GetList(ctx context.Context, in *v1.GetListCre
 	return res, err
 }
 
+// GetAll implements GetAll
+func (s *CrewDutyIndexController) GetAll(ctx context.Context, in *v1.GetAllCrewDutyIndexReq) (*v1.GetAllCrewDutyIndexRes, error) {
+	res, err := service.CrewDutyIndex().GetAll(ctx, in)
+	return res, err
+}
+
 func (s *CrewDutyIndexController) GetOne(ctx context.Context, in *v1.GetOneCrewDutyIndexReq) (*v1.GetOneCrewDutyIndexRes, error) {
 	res, err := service.CrewDutyIndex().GetOne(ctx, in)
 	return res, err

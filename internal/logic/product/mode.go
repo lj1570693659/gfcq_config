@@ -114,6 +114,36 @@ func (s *sMode) GetList(ctx context.Context, in *v1.GetListModeReq) (*v1.GetList
 	return res, err
 }
 
+func (s *sMode) GetAll(ctx context.Context, in *v1.GetAllModeReq) (*v1.GetAllModeRes, error) {
+	resData := make([]*v1.ModeInfo, 0)
+	confirmEntity := make([]entity.ProductMode, 0)
+
+	query := dao.ProductMode.Ctx(ctx)
+
+	// 优先级
+	if len(in.GetMode().GetName()) > 0 {
+		query = query.Where(fmt.Sprintf("%s like ?", dao.ProductMode.Columns().Name), g.Slice{fmt.Sprintf("%s%s", in.GetMode().GetName(), "%")})
+	}
+	// 主键查询
+	if in.GetMode().GetId() > 0 {
+		query = query.Where(dao.ProductMode.Columns().Id, in.GetMode().GetId())
+	}
+
+	// 主键
+	if len(in.GetMode().GetRemark()) > 0 {
+		query = query.Where(fmt.Sprintf("%s like ?", dao.ProductMode.Columns().Remark), g.Slice{fmt.Sprintf("%s%s", in.GetMode().GetRemark(), "%")})
+	}
+
+	err := query.Scan(&confirmEntity)
+
+	levelEntityByte, _ := json.Marshal(confirmEntity)
+	json.Unmarshal(levelEntityByte, &resData)
+
+	return &v1.GetAllModeRes{
+		Data: resData,
+	}, err
+}
+
 func (s *sMode) Modify(ctx context.Context, in *v1.ModifyModeReq) (*v1.ModifyModeRes, error) {
 	res := &v1.ModifyModeRes{Mode: &v1.ModeInfo{}}
 	if g.IsEmpty(in.GetId()) {

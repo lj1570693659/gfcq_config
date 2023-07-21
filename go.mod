@@ -6,14 +6,13 @@ require (
 	github.com/gogf/gf/contrib/drivers/mysql/v2 v2.4.4
 	github.com/gogf/gf/contrib/rpc/grpcx/v2 v2.4.4
 	github.com/gogf/gf/v2 v2.4.4
-	github.com/lj1570693659/gfcq_protoc v0.0.0-20230713124446-48d560ef75bd
+	github.com/lj1570693659/gfcq_protoc v0.0.0-20230719022246-5a0d9e42edbe
 	go.etcd.io/etcd/client/v3 v3.5.4
 	google.golang.org/grpc v1.56.1
 )
 
 require (
 	github.com/BurntSushi/toml v1.1.0 // indirect
-	github.com/clbanning/mxj v1.8.5-0.20200714211355-ff02cfb8ea28 // indirect
 	github.com/clbanning/mxj/v2 v2.5.5 // indirect
 	github.com/coreos/go-semver v0.3.0 // indirect
 	github.com/coreos/go-systemd/v22 v22.3.2 // indirect
@@ -22,12 +21,9 @@ require (
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
-	github.com/gogf/gf v1.16.9 // indirect
-	github.com/gogf/gf/contrib/registry/etcd/v2 v2.4.4 // indirect
 	github.com/gogf/gf/contrib/registry/file/v2 v2.4.4 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
-	github.com/gomodule/redigo v1.8.5 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/grokify/html-strip-tags-go v0.0.1 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect

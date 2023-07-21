@@ -23,6 +23,12 @@ func (s *CrewManageIndexController) GetList(ctx context.Context, in *v1.GetListC
 	return res, err
 }
 
+// GetAll implements GetAll
+func (s *CrewManageIndexController) GetAll(ctx context.Context, in *v1.GetAllCrewManageIndexReq) (*v1.GetAllCrewManageIndexRes, error) {
+	res, err := service.CrewManageIndex().GetAll(ctx, in)
+	return res, err
+}
+
 func (s *CrewManageIndexController) GetOne(ctx context.Context, in *v1.GetOneCrewManageIndexReq) (*v1.GetOneCrewManageIndexRes, error) {
 	res, err := service.CrewManageIndex().GetOne(ctx, in)
 	return res, err

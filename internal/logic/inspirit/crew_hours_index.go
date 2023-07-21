@@ -125,6 +125,40 @@ func (s *sCrewHoursIndex) GetList(ctx context.Context, in *v1.GetListCrewHoursIn
 	return res, err
 }
 
+func (s *sCrewHoursIndex) GetAll(ctx context.Context, in *v1.GetAllCrewHoursIndexReq) (*v1.GetAllCrewHoursIndexRes, error) {
+	res := &v1.GetAllCrewHoursIndexRes{}
+	resData := make([]*v1.CrewHoursIndexInfo, 0)
+	budgetEntity := make([]entity.CrewHoursIndex, 0)
+
+	query := dao.CrewHoursIndex.Ctx(ctx)
+
+	// 评价标准
+	if in.GetCrewHoursIndex().GetScoreIndex() > 0 {
+		query = query.Where(dao.CrewHoursIndex.Columns().ScoreIndex, in.GetCrewHoursIndex().GetScoreIndex())
+	}
+	if in.GetCrewHoursIndex().GetScoreMin() > 0 {
+		query = query.Where(dao.CrewHoursIndex.Columns().ScoreMin, in.GetCrewHoursIndex().GetScoreMin())
+	}
+	if in.GetCrewHoursIndex().GetScoreMax() > 0 {
+		query = query.Where(dao.CrewHoursIndex.Columns().ScoreMax, in.GetCrewHoursIndex().GetScoreMax())
+	}
+	// 主键查询
+	if in.GetCrewHoursIndex().GetId() > 0 {
+		query = query.Where(dao.CrewHoursIndex.Columns().Id, in.GetCrewHoursIndex().GetId())
+	}
+	// 备注
+	if len(in.GetCrewHoursIndex().GetRemark()) > 0 {
+		query = query.Where(fmt.Sprintf("%s like ?", dao.CrewHoursIndex.Columns().Remark), g.Slice{fmt.Sprintf("%s%s", in.GetCrewHoursIndex().GetRemark(), "%")})
+	}
+
+	err := query.Scan(&budgetEntity)
+
+	levelEntityByte, _ := json.Marshal(budgetEntity)
+	json.Unmarshal(levelEntityByte, &resData)
+	res.Data = resData
+	return res, err
+}
+
 func (s *sCrewHoursIndex) Modify(ctx context.Context, in *v1.ModifyCrewHoursIndexReq) (*v1.ModifyCrewHoursIndexRes, error) {
 	res := &v1.ModifyCrewHoursIndexRes{CrewHoursIndex: &v1.CrewHoursIndexInfo{}}
 	if g.IsEmpty(in.GetId()) {

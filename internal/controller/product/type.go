@@ -1,64 +1,35 @@
 package product
 
-//import (
-//	"context"
-//	"github.com/gogf/gf/contrib/rpc/grpcx/v2"
-//	"github.com/lj1570693659/gfcq_config/internal/service"
-//	v1 "github.com/lj1570693659/gfcq_protoc/common/v1"
-//)
-//
-//// 项目类型信息
-//type EmployeeJobController struct {
-//	v1.UnimplementedEmployeeServer
-//}
-//
-//func EmployeeJobRegister(s *grpcx.GrpcServer) {
-//	v1.RegisterEmployeeJobServer(s.Server, &EmployeeJobController{})
-//}
-//
-//// GetList implements GetList
-//func (s *EmployeeJobController) GetList(ctx context.Context, in *v1.GetListEmployeeJobReq) (*v1.GetListEmployeeJobRes, error) {
-//	res, err := service.EmployeeJob().GetList(ctx, in.GetEmployeeJob(), in.GetPage(), in.GetSize())
-//	return res, err
-//}
-//
-//func (s *EmployeeJobController) GetOne(ctx context.Context, in *v1.GetOneEmployeeJobReq) (*v1.GetOneEmployeeJobRes, error) {
-//	res, err := service.EmployeeJob().GetOne(ctx, &v1.EmployeeJobInfo{
-//		EmployeeId: in.GetEmployeeId(),
-//		JobId:      in.GetJobId(),
-//	})
-//	return &v1.GetOneEmployeeJobRes{
-//		EmployeeJob: res,
-//	}, err
-//}
-//
-//func (s *EmployeeJobController) Create(ctx context.Context, in *v1.CreateEmployeeJobReq) (*v1.CreateEmployeeJobRes, error) {
-//	res, err := service.EmployeeJob().Create(ctx, &v1.EmployeeJobInfo{
-//		EmployeeId: in.GetEmployeeId(),
-//		JobId:      in.GetJobId(),
-//		Remark:     in.GetRemark(),
-//	})
-//	return &v1.CreateEmployeeJobRes{
-//		EmployeeJob: res,
-//	}, err
-//}
-//
-//func (s *EmployeeJobController) Modify(ctx context.Context, in *v1.ModifyEmployeeJobReq) (*v1.ModifyEmployeeJobRes, error) {
-//	res, err := service.EmployeeJob().Modify(ctx, &v1.EmployeeJobInfo{
-//		Id:         in.GetId(),
-//		EmployeeId: in.GetEmployeeId(),
-//		JobId:      in.GetJobId(),
-//		Remark:     in.GetRemark(),
-//	})
-//	return &v1.ModifyEmployeeJobRes{
-//		EmployeeJob: res,
-//	}, err
-//}
-//
-//func (s *EmployeeJobController) Delete(ctx context.Context, in *v1.DeleteEmployeeJobReq) (*v1.DeleteEmployeeJobRes, error) {
-//	isSuccess, msg, err := service.EmployeeJob().Delete(ctx, in)
-//	return &v1.DeleteEmployeeJobRes{
-//		IsSuccess: isSuccess,
-//		Msg:       msg,
-//	}, err
-//}
+import v1 "github.com/lj1570693659/gfcq_protoc/config/product/v1"
+
+import (
+	"context"
+	"github.com/gogf/gf/contrib/rpc/grpcx/v2"
+	service "github.com/lj1570693659/gfcq_config/internal/service/product"
+)
+
+// TypeController 项目类型信息
+type TypeController struct {
+	v1.UnimplementedTypeServer
+}
+
+func TypeRegister(s *grpcx.GrpcServer) {
+	v1.RegisterTypeServer(s.Server, &TypeController{})
+}
+
+// GetList implements GetList
+func (s *TypeController) GetList(ctx context.Context, in *v1.GetListTypeReq) (*v1.GetListTypeRes, error) {
+	res, err := service.Type().GetList(ctx, in)
+	return res, err
+}
+
+// GetAll implements GetAll
+func (s *TypeController) GetAll(ctx context.Context, in *v1.GetAllTypeReq) (*v1.GetAllTypeRes, error) {
+	res, err := service.Type().GetAll(ctx, in)
+	return res, err
+}
+
+func (s *TypeController) GetOne(ctx context.Context, in *v1.GetOneTypeReq) (*v1.GetOneTypeRes, error) {
+	res, err := service.Type().GetOne(ctx, in)
+	return res, err
+}

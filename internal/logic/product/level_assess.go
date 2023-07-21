@@ -121,6 +121,39 @@ func (s *sLevelAssess) GetList(ctx context.Context, in *v1.GetListLevelAssessReq
 	return res, err
 }
 
+func (s *sLevelAssess) GetListWithoutPage(ctx context.Context, in *v1.GetListWithoutLevelAssessReq) (*v1.GetListWithoutLevelAssessRes, error) {
+	res := &v1.GetListWithoutLevelAssessRes{}
+	resData := make([]*v1.LevelAssessInfo, 0)
+	levelEntity := make([]entity.ProductLevelAssess, 0)
+
+	query := dao.ProductLevelAssess.Ctx(ctx)
+
+	// 评价标准
+	if len(in.GetLevelAssess().GetEvaluateCriteria()) > 0 {
+		query = query.Where(fmt.Sprintf("%s like ?", dao.ProductLevelAssess.Columns().EvaluateCriteria), g.Slice{fmt.Sprintf("%s%s", in.GetLevelAssess().GetEvaluateCriteria(), "%")})
+	}
+	// 主键查询
+	if in.GetLevelAssess().GetId() > 0 {
+		query = query.Where(dao.ProductLevelAssess.Columns().Id, in.GetLevelAssess().GetId())
+	}
+	if in.GetLevelAssess().GetEvaluateId() > 0 {
+		query = query.Where(dao.ProductLevelAssess.Columns().EvaluateId, in.GetLevelAssess().GetEvaluateId())
+	} else if in.GetLevelAssess().GetEvaluateId() == -1 {
+		query = query.Where(dao.ProductLevelAssess.Columns().EvaluateId, 0)
+	}
+	// 主键
+	if len(in.GetLevelAssess().GetRemark()) > 0 {
+		query = query.Where(fmt.Sprintf("%s like ?", dao.ProductLevelAssess.Columns().Remark), g.Slice{fmt.Sprintf("%s%s", in.GetLevelAssess().GetRemark(), "%")})
+	}
+
+	err := query.Scan(&levelEntity)
+
+	levelEntityByte, _ := json.Marshal(levelEntity)
+	json.Unmarshal(levelEntityByte, &resData)
+	res.Data = resData
+	return res, err
+}
+
 func (s *sLevelAssess) Modify(ctx context.Context, in *v1.ModifyLevelAssessReq) (*v1.ModifyLevelAssessRes, error) {
 	res := &v1.ModifyLevelAssessRes{LevelAssess: &v1.LevelAssessInfo{
 		Id:                 in.GetId(),

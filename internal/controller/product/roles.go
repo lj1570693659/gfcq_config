@@ -7,7 +7,7 @@ import (
 	v1 "github.com/lj1570693659/gfcq_protoc/config/product/v1"
 )
 
-// RolesController 项目开发模式信息
+// RolesController 项目角色配置信息
 type RolesController struct {
 	v1.UnimplementedRolesServer
 }
@@ -19,6 +19,11 @@ func RolesRegister(s *grpcx.GrpcServer) {
 // GetList implements GetList
 func (s *RolesController) GetList(ctx context.Context, in *v1.GetListRolesReq) (*v1.GetListRolesRes, error) {
 	return service.Roles().GetList(ctx, in)
+}
+
+// GetAll implements GetAll
+func (s *RolesController) GetAll(ctx context.Context, in *v1.GetAllRolesReq) (*v1.GetAllRolesRes, error) {
+	return service.Roles().GetAll(ctx, in)
 }
 
 func (s *RolesController) GetOne(ctx context.Context, in *v1.GetOneRolesReq) (*v1.GetOneRolesRes, error) {

@@ -125,6 +125,40 @@ func (s *sCrewOvertimeRule) GetList(ctx context.Context, in *v1.GetListCrewOvert
 	return res, err
 }
 
+func (s *sCrewOvertimeRule) GetAll(ctx context.Context, in *v1.GetAllCrewOvertimeRuleReq) (*v1.GetAllCrewOvertimeRuleRes, error) {
+	res := &v1.GetAllCrewOvertimeRuleRes{}
+	resData := make([]*v1.CrewOvertimeRuleInfo, 0)
+	budgetEntity := make([]entity.CrewOvertimeRule, 0)
+
+	query := dao.CrewOvertimeRule.Ctx(ctx)
+
+	// 评价标准
+	if in.GetCrewOvertimeRule().GetRedio() > 0 {
+		query = query.Where(dao.CrewOvertimeRule.Columns().Redio, in.GetCrewOvertimeRule().GetRedio())
+	}
+	if in.GetCrewOvertimeRule().GetScoreMin() > 0 {
+		query = query.Where(dao.CrewOvertimeRule.Columns().ScoreMin, in.GetCrewOvertimeRule().GetScoreMin())
+	}
+	if in.GetCrewOvertimeRule().GetScoreMax() > 0 {
+		query = query.Where(dao.CrewOvertimeRule.Columns().ScoreMax, in.GetCrewOvertimeRule().GetScoreMax())
+	}
+	// 主键查询
+	if in.GetCrewOvertimeRule().GetId() > 0 {
+		query = query.Where(dao.CrewOvertimeRule.Columns().Id, in.GetCrewOvertimeRule().GetId())
+	}
+	// 备注
+	if len(in.GetCrewOvertimeRule().GetRemark()) > 0 {
+		query = query.Where(fmt.Sprintf("%s like ?", dao.CrewOvertimeRule.Columns().Remark), g.Slice{fmt.Sprintf("%s%s", in.GetCrewOvertimeRule().GetRemark(), "%")})
+	}
+
+	err := query.Scan(&budgetEntity)
+
+	levelEntityByte, _ := json.Marshal(budgetEntity)
+	json.Unmarshal(levelEntityByte, &resData)
+	res.Data = resData
+	return res, err
+}
+
 func (s *sCrewOvertimeRule) Modify(ctx context.Context, in *v1.ModifyCrewOvertimeRuleReq) (*v1.ModifyCrewOvertimeRuleRes, error) {
 	res := &v1.ModifyCrewOvertimeRuleRes{CrewOvertimeRule: &v1.CrewOvertimeRuleInfo{}}
 	if g.IsEmpty(in.GetId()) {

@@ -34,6 +34,26 @@ func Test_LevelAssess_GetList(t *testing.T) {
 
 }
 
+func Test_LevelAssess_GetListWithoutPage(t *testing.T) {
+	var (
+		ctx    = gctx.GetInitCtx()
+		conn   = grpcx.Client.MustNewGrpcClientConn("gfcq_config")
+		depert = v1.NewLevelAssessClient(conn)
+		res    *v1.GetListWithoutLevelAssessRes
+		err    error
+	)
+	res, err = depert.GetListWithoutPage(ctx, &v1.GetListWithoutLevelAssessReq{})
+	fmt.Println("res=============", res)
+	fmt.Println("err=============", err)
+	if err != nil {
+		g.Log().Fatalf(ctx, `get inspirit list failed: %+v`, err)
+	}
+
+	for _, v := range res.GetData() {
+		fmt.Println(v)
+	}
+
+}
 func Test_LevelAssess_GetOne(t *testing.T) {
 	var (
 		ctx    = gctx.GetInitCtx()

@@ -23,6 +23,16 @@ func (s *ProductStageRadioController) GetList(ctx context.Context, in *v1.GetLis
 	return res, err
 }
 
+func (s *ProductStageRadioController) GetAll(ctx context.Context, in *v1.GetAllStageRadioReq) (*v1.GetAllStageRadioRes, error) {
+	res, err := service.StageRadio().GetAll(ctx, in)
+	return res, err
+}
+
+func (s *ProductStageRadioController) GetQuotaRadioByScore(ctx context.Context, in *v1.GetQuotaRadioByScoreReq) (*v1.GetQuotaRadioByScoreRes, error) {
+	res, err := service.StageRadio().GetQuotaRadioByScore(ctx, in)
+	return res, err
+}
+
 func (s *ProductStageRadioController) GetOne(ctx context.Context, in *v1.GetOneStageRadioReq) (*v1.GetOneStageRadioRes, error) {
 	res, err := service.StageRadio().GetOne(ctx, in)
 	return res, err

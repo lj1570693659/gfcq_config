@@ -10,6 +10,7 @@ type (
 		Create(ctx context.Context, info *v1.CreateCrewOvertimeRuleReq) (*v1.CreateCrewOvertimeRuleRes, error)
 		GetOne(ctx context.Context, info *v1.GetOneCrewOvertimeRuleReq) (*v1.GetOneCrewOvertimeRuleRes, error)
 		GetList(ctx context.Context, info *v1.GetListCrewOvertimeRuleReq) (*v1.GetListCrewOvertimeRuleRes, error)
+		GetAll(ctx context.Context, info *v1.GetAllCrewOvertimeRuleReq) (*v1.GetAllCrewOvertimeRuleRes, error)
 		Modify(ctx context.Context, info *v1.ModifyCrewOvertimeRuleReq) (*v1.ModifyCrewOvertimeRuleRes, error)
 		Delete(ctx context.Context, id int32) (isSuccess bool, msg string, err error)
 	}

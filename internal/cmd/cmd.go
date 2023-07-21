@@ -31,6 +31,7 @@ var (
 			product.LevelAssessRegister(s)
 			product.LevelConfirmRegister(s)
 			product.ModeRegister(s)
+			product.TypeRegister(s)
 			product.ModeStageRegister(s)
 			product.RolesRegister(s)
 			// 激励配置
@@ -40,6 +41,7 @@ var (
 			inspirit.CrewManageIndexRegister(s)
 			inspirit.CrewOvertimeRuleRegister(s)
 			inspirit.CrewSolveRuleRegister(s)
+			inspirit.CrewKpiRuleRegister(s)
 			inspirit.ProductStageRadioRegister(s)
 			s.Run()
 			return nil

@@ -21,6 +21,11 @@ func (s *ModeStageController) GetList(ctx context.Context, in *v1.GetListModeSta
 	return service.ModeStage().GetList(ctx, in)
 }
 
+// GetAll implements GetAll
+func (s *ModeStageController) GetAll(ctx context.Context, in *v1.GetAllModeStageReq) (*v1.GetAllModeStageRes, error) {
+	return service.ModeStage().GetAll(ctx, in)
+}
+
 func (s *ModeStageController) GetOne(ctx context.Context, in *v1.GetOneModeStageReq) (*v1.GetOneModeStageRes, error) {
 	return service.ModeStage().GetOne(ctx, in)
 }

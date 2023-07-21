@@ -23,6 +23,12 @@ func (s *CrewOvertimeRuleController) GetList(ctx context.Context, in *v1.GetList
 	return res, err
 }
 
+// GetAll implements GetAll
+func (s *CrewOvertimeRuleController) GetAll(ctx context.Context, in *v1.GetAllCrewOvertimeRuleReq) (*v1.GetAllCrewOvertimeRuleRes, error) {
+	res, err := service.CrewOvertimeRule().GetAll(ctx, in)
+	return res, err
+}
+
 func (s *CrewOvertimeRuleController) GetOne(ctx context.Context, in *v1.GetOneCrewOvertimeRuleReq) (*v1.GetOneCrewOvertimeRuleRes, error) {
 	res, err := service.CrewOvertimeRule().GetOne(ctx, in)
 	return res, err

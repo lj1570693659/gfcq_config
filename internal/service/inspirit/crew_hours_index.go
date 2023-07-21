@@ -10,6 +10,7 @@ type (
 		Create(ctx context.Context, info *v1.CreateCrewHoursIndexReq) (*v1.CreateCrewHoursIndexRes, error)
 		GetOne(ctx context.Context, info *v1.GetOneCrewHoursIndexReq) (*v1.GetOneCrewHoursIndexRes, error)
 		GetList(ctx context.Context, info *v1.GetListCrewHoursIndexReq) (*v1.GetListCrewHoursIndexRes, error)
+		GetAll(ctx context.Context, info *v1.GetAllCrewHoursIndexReq) (*v1.GetAllCrewHoursIndexRes, error)
 		Modify(ctx context.Context, info *v1.ModifyCrewHoursIndexReq) (*v1.ModifyCrewHoursIndexRes, error)
 		Delete(ctx context.Context, id int32) (isSuccess bool, msg string, err error)
 	}

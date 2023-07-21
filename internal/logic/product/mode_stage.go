@@ -55,6 +55,40 @@ func (s *sModeStage) Create(ctx context.Context, in *v1.CreateModeStageReq) (*v1
 	return res, nil
 }
 
+func (s *sModeStage) GetAll(ctx context.Context, in *v1.GetAllModeStageReq) (*v1.GetAllModeStageRes, error) {
+	res := &v1.GetAllModeStageRes{
+		Data: make([]*v1.ModeStageInfo, 0),
+	}
+	resData := make([]*v1.ModeStageInfo, 0)
+	stageEntity := make([]entity.ProductModeStage, 0)
+
+	query := dao.ProductModeStage.Ctx(ctx)
+
+	// 优先级
+	if len(in.GetModeStage().GetName()) > 0 {
+		query = query.Where(fmt.Sprintf("%s like ?", dao.ProductModeStage.Columns().Name), g.Slice{fmt.Sprintf("%s%s", in.GetModeStage().GetName(), "%")})
+	}
+	// 主键查询
+	if in.GetModeStage().GetId() > 0 {
+		query = query.Where(dao.ProductModeStage.Columns().Id, in.GetModeStage().GetId())
+	}
+	if in.GetModeStage().GetTid() > 0 {
+		query = query.Where(dao.ProductModeStage.Columns().Tid, in.GetModeStage().GetTid())
+	}
+
+	// 主键
+	if len(in.GetModeStage().GetRemark()) > 0 {
+		query = query.Where(fmt.Sprintf("%s like ?", dao.ProductModeStage.Columns().Remark), g.Slice{fmt.Sprintf("%s%s", in.GetModeStage().GetRemark(), "%")})
+	}
+
+	err := query.Scan(&stageEntity)
+
+	levelEntityByte, _ := json.Marshal(stageEntity)
+	json.Unmarshal(levelEntityByte, &resData)
+	res.Data = resData
+	return res, err
+}
+
 func (s *sModeStage) GetOne(ctx context.Context, in *v1.GetOneModeStageReq) (*v1.GetOneModeStageRes, error) {
 	var info *v1.ModeStageInfo
 	query := dao.ProductModeStage.Ctx(ctx)
@@ -180,11 +214,11 @@ func (s *sModeStage) GetRadioSumByCondition(ctx context.Context, condition g.Map
 
 func (s *sModeStage) checkInputData(ctx context.Context, in *v1.ModeStageInfo) (*v1.ModeStageInfo, error) {
 	if len(in.GetName()) == 0 {
-		return in, errors.New("研发模式不能为空")
+		return in, errors.New("阶段名称不能为空")
 	}
 
 	if in.GetTid() == 0 {
-		return in, errors.New("对应研发模式不能为空")
+		return in, errors.New("对应项目类型不能为空")
 	}
 
 	if in.GetQuotaRadio() < 0 || in.GetQuotaRadio() > 1 {
@@ -197,8 +231,20 @@ func (s *sModeStage) checkInputData(ctx context.Context, in *v1.ModeStageInfo) (
 	if in.GetId() > 0 {
 		condition["id != ?"] = in.GetId()
 	}
+	// 项目类型存在
+	typeInfo, err := service.Type().GetOne(ctx, &v1.GetOneTypeReq{
+		Type: &v1.TypeInfo{
+			Id: in.GetTid(),
+		},
+	})
+	if err != nil && err.Error() != sql.ErrNoRows.Error() {
+		return in, err
+	}
+	if g.IsNil(typeInfo.GetType()) || g.IsEmpty(typeInfo.GetType()) {
+		return in, errors.New("项目类型不存在，请先完善")
+	}
 
-	// 同一研发模式下，阶段额度占比和不能大于1
+	// 同一项目类型下，阶段额度占比和不能大于1
 	sum, err := s.GetRadioSumByCondition(ctx, condition)
 	if err != nil && err != sql.ErrNoRows {
 		return in, err
@@ -207,7 +253,7 @@ func (s *sModeStage) checkInputData(ctx context.Context, in *v1.ModeStageInfo) (
 		return in, errors.New("阶段额度占比和不能超过1，请确认输入信息是否正确")
 	}
 
-	// 同一研发模式下阶段名称不能重复
+	// 同一项目类型下阶段名称不能重复
 	condition[fmt.Sprintf("%s = ?", dao.ProductModeStage.Columns().Name)] = in.GetName()
 	getInfo, err := s.GetOneByCondition(ctx, condition)
 	if err != nil && err != sql.ErrNoRows {

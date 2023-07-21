@@ -64,9 +64,13 @@ func (s *sCrewSolveRule) GetOne(ctx context.Context, in *v1.GetOneCrewSolveRuleR
 		query = query.Where(dao.CrewSolveRule.Columns().Redio, in.GetCrewSolveRule().GetRedio())
 	}
 
-	if value, ok := v1.DemandEnum_value[in.GetCrewSolveRule().GetDemand().String()]; ok {
-		query = query.Where(dao.CrewSolveRule.Columns().Demand, value)
+	// -1 全部
+	if in.GetCrewSolveRule().GetDemand() == -1 {
+		if in.GetCrewSolveRule().GetDemand() > 0 {
+			query = query.Where(dao.CrewSolveRule.Columns().Demand, in.GetCrewSolveRule().GetDemand())
+		}
 	}
+
 	// 主键查询
 	if in.GetCrewSolveRule().GetId() > 0 {
 		query = query.Where(dao.CrewSolveRule.Columns().Id, in.GetCrewSolveRule().GetId())
@@ -118,6 +122,37 @@ func (s *sCrewSolveRule) GetList(ctx context.Context, in *v1.GetListCrewSolveRul
 	return res, err
 }
 
+func (s *sCrewSolveRule) GetAll(ctx context.Context, in *v1.GetAllCrewSolveRuleReq) (*v1.GetAllCrewSolveRuleRes, error) {
+	res := &v1.GetAllCrewSolveRuleRes{}
+	resData := make([]*v1.CrewSolveRuleInfo, 0)
+	budgetEntity := make([]entity.CrewSolveRule, 0)
+
+	query := dao.CrewSolveRule.Ctx(ctx)
+
+	// 评价标准
+	if in.GetCrewSolveRule().GetRedio() > 0 {
+		query = query.Where(dao.CrewSolveRule.Columns().Redio, in.GetCrewSolveRule().GetRedio())
+	}
+	if in.GetCrewSolveRule().GetDemand() > 0 {
+		query = query.Where(dao.CrewSolveRule.Columns().Demand, in.GetCrewSolveRule().GetDemand())
+	}
+	// 主键查询
+	if in.GetCrewSolveRule().GetId() > 0 {
+		query = query.Where(dao.CrewSolveRule.Columns().Id, in.GetCrewSolveRule().GetId())
+	}
+	// 备注
+	if len(in.GetCrewSolveRule().GetRemark()) > 0 {
+		query = query.Where(fmt.Sprintf("%s like ?", dao.CrewSolveRule.Columns().Remark), g.Slice{fmt.Sprintf("%s%s", in.GetCrewSolveRule().GetRemark(), "%")})
+	}
+
+	err := query.Scan(&budgetEntity)
+
+	levelEntityByte, _ := json.Marshal(budgetEntity)
+	json.Unmarshal(levelEntityByte, &resData)
+	res.Data = resData
+	return res, err
+}
+
 func (s *sCrewSolveRule) Modify(ctx context.Context, in *v1.ModifyCrewSolveRuleReq) (*v1.ModifyCrewSolveRuleRes, error) {
 	res := &v1.ModifyCrewSolveRuleRes{CrewSolveRule: &v1.CrewSolveRuleInfo{}}
 	if g.IsEmpty(in.GetId()) {
@@ -155,7 +190,7 @@ func (s *sCrewSolveRule) Delete(ctx context.Context, id int32) (isSuccess bool, 
 
 	// 校验修改的原始数据是否存在
 	info, err := s.GetOne(ctx, &v1.GetOneCrewSolveRuleReq{CrewSolveRule: &v1.CrewSolveRuleInfo{Id: id}})
-	if (err != nil && err == sql.ErrNoRows) || (!g.IsNil(info) && g.IsEmpty(info.CrewSolveRule.Id)) {
+	if (err != nil && err.Error() == sql.ErrNoRows.Error()) || (!g.IsNil(info) && g.IsNil(info.CrewSolveRule)) {
 		return false, "当前数据不存在，请联系相关维护人员", errors.New("接收到的ID在数据库中没有对应数据")
 	}
 

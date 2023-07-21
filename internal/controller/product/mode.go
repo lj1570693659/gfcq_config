@@ -21,6 +21,10 @@ func (s *ModeController) GetList(ctx context.Context, in *v1.GetListModeReq) (*v
 	return service.Mode().GetList(ctx, in)
 }
 
+func (s *ModeController) GetAll(ctx context.Context, in *v1.GetAllModeReq) (*v1.GetAllModeRes, error) {
+	return service.Mode().GetAll(ctx, in)
+}
+
 func (s *ModeController) GetOne(ctx context.Context, in *v1.GetOneModeReq) (*v1.GetOneModeRes, error) {
 	return service.Mode().GetOne(ctx, in)
 }

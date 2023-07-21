@@ -23,6 +23,11 @@ func (s *CrewHoursIndexController) GetList(ctx context.Context, in *v1.GetListCr
 	return res, err
 }
 
+func (s *CrewHoursIndexController) GetAll(ctx context.Context, in *v1.GetAllCrewHoursIndexReq) (*v1.GetAllCrewHoursIndexRes, error) {
+	res, err := service.CrewHoursIndex().GetAll(ctx, in)
+	return res, err
+}
+
 func (s *CrewHoursIndexController) GetOne(ctx context.Context, in *v1.GetOneCrewHoursIndexReq) (*v1.GetOneCrewHoursIndexRes, error) {
 	res, err := service.CrewHoursIndex().GetOne(ctx, in)
 	return res, err
