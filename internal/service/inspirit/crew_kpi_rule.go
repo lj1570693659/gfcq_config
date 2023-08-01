@@ -10,7 +10,7 @@ type (
 		Create(ctx context.Context, info *v1.CreateCrewKpiRuleReq) (*v1.CreateCrewKpiRuleRes, error)
 		GetOne(ctx context.Context, info *v1.GetOneCrewKpiRuleReq) (*v1.GetOneCrewKpiRuleRes, error)
 		GetList(ctx context.Context, info *v1.GetListCrewKpiRuleReq) (*v1.GetListCrewKpiRuleRes, error)
-		//GetAll(ctx context.Context, info *v1.GetAllCrewKpiRuleReq) (*v1.GetAllCrewKpiRuleRes, error)
+		GetAll(ctx context.Context, info *v1.GetAllCrewKpiRuleReq) (*v1.GetAllCrewKpiRuleRes, error)
 		Modify(ctx context.Context, info *v1.ModifyCrewKpiRuleReq) (*v1.ModifyCrewKpiRuleRes, error)
 		Delete(ctx context.Context, id int32) (isSuccess bool, msg string, err error)
 	}

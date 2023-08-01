@@ -120,6 +120,37 @@ func (s *sCrewKpiRule) GetList(ctx context.Context, in *v1.GetListCrewKpiRuleReq
 	return res, err
 }
 
+func (s *sCrewKpiRule) GetAll(ctx context.Context, in *v1.GetAllCrewKpiRuleReq) (*v1.GetAllCrewKpiRuleRes, error) {
+	res := &v1.GetAllCrewKpiRuleRes{}
+	resData := make([]*v1.CrewKpiRuleInfo, 0)
+	budgetEntity := make([]entity.CrewKpiRule, 0)
+
+	query := dao.CrewKpiRule.Ctx(ctx)
+
+	// 评价标准
+	if in.GetCrewKpiRule().GetRedio() > 0 {
+		query = query.Where(dao.CrewKpiRule.Columns().Redio, in.GetCrewKpiRule().GetRedio())
+	}
+	if len(in.GetCrewKpiRule().GetLevelName()) > 0 {
+		query = query.Where(dao.CrewKpiRule.Columns().LevelName, in.GetCrewKpiRule().GetLevelName())
+	}
+	// 主键查询
+	if in.GetCrewKpiRule().GetId() > 0 {
+		query = query.Where(dao.CrewKpiRule.Columns().Id, in.GetCrewKpiRule().GetId())
+	}
+	// 备注
+	if len(in.GetCrewKpiRule().GetRemark()) > 0 {
+		query = query.Where(fmt.Sprintf("%s like ?", dao.CrewKpiRule.Columns().Remark), g.Slice{fmt.Sprintf("%s%s", in.GetCrewKpiRule().GetRemark(), "%")})
+	}
+
+	err := query.Scan(&budgetEntity)
+
+	levelEntityByte, _ := json.Marshal(budgetEntity)
+	json.Unmarshal(levelEntityByte, &resData)
+	res.Data = resData
+	return res, err
+}
+
 func (s *sCrewKpiRule) Modify(ctx context.Context, in *v1.ModifyCrewKpiRuleReq) (*v1.ModifyCrewKpiRuleRes, error) {
 	res := &v1.ModifyCrewKpiRuleRes{CrewKpiRule: &v1.CrewKpiRuleInfo{}}
 	if g.IsEmpty(in.GetId()) {

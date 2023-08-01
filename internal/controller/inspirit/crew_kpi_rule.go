@@ -24,10 +24,10 @@ func (s *CrewKpiRuleController) GetList(ctx context.Context, in *v1.GetListCrewK
 }
 
 // GetAll implements GetAll
-//func (s *CrewKpiRuleController) GetAll(ctx context.Context, in *v1.GetAllCrewKpiRuleReq) (*v1.GetAllCrewKpiRuleRes, error) {
-//	res, err := service.CrewKpiRule().GetAll(ctx, in)
-//	return res, err
-//}
+func (s *CrewKpiRuleController) GetAll(ctx context.Context, in *v1.GetAllCrewKpiRuleReq) (*v1.GetAllCrewKpiRuleRes, error) {
+	res, err := service.CrewKpiRule().GetAll(ctx, in)
+	return res, err
+}
 
 func (s *CrewKpiRuleController) GetOne(ctx context.Context, in *v1.GetOneCrewKpiRuleReq) (*v1.GetOneCrewKpiRuleRes, error) {
 	res, err := service.CrewKpiRule().GetOne(ctx, in)

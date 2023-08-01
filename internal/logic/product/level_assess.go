@@ -212,10 +212,11 @@ func (s *sLevelAssess) Delete(ctx context.Context, id int32) (isSuccess bool, ms
 	// 删除父级时，校验子维度是否为空
 	if g.IsEmpty(info.LevelAssess.GetEvaluateId()) {
 		zidInfo, err := s.GetOne(ctx, &v1.GetOneLevelAssessReq{LevelAssess: &v1.LevelAssessInfo{EvaluateId: id}})
-		if err != nil && err != sql.ErrNoRows {
+		if err != nil && err.Error() != sql.ErrNoRows.Error() {
 			return false, "当前数据不存在，请联系相关维护人员", err
 		}
-		if !g.IsEmpty(zidInfo.LevelAssess.Id) {
+		fmt.Println("zidInfo-------------------", zidInfo.GetLevelAssess())
+		if !g.IsNil(zidInfo.GetLevelAssess()) && !g.IsEmpty(zidInfo.LevelAssess.Id) {
 			return false, "请先移除当前评价维度的下级信息", errors.New(fmt.Sprintf("当前评价维度存在子级信息ID：%d,评价标准:%s", zidInfo.LevelAssess.Id, zidInfo.LevelAssess.EvaluateCriteria))
 		}
 	}
