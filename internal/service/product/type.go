@@ -10,6 +10,9 @@ type (
 		GetOne(ctx context.Context, info *v1.GetOneTypeReq) (*v1.GetOneTypeRes, error)
 		GetList(ctx context.Context, info *v1.GetListTypeReq) (*v1.GetListTypeRes, error)
 		GetAll(ctx context.Context, info *v1.GetAllTypeReq) (*v1.GetAllTypeRes, error)
+		Create(ctx context.Context, info *v1.CreateTypeReq) (*v1.CreateTypeRes, error)
+		Modify(ctx context.Context, info *v1.ModifyTypeReq) (*v1.ModifyTypeRes, error)
+		Delete(ctx context.Context, id int32) (bool, string, error)
 	}
 )
 

@@ -9,10 +9,10 @@ grpc:
   errorLogPattern: "error-{Ymd}.log"
   accessLogEnabled: true
   accessLogPattern: "access-{Ymd}.log"
-  etcdLink: "127.0.0.1:23792"
+  etcdLink: "127.0.0.1:22379"
   organize:
     name: "organize"
-    link: "127.0.0.1:23791"
+    link: "127.0.0.1:12379"
 
 # Global logging.
 logger:

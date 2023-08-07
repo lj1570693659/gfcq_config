@@ -7,8 +7,11 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gtime"
+	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/lj1570693659/gfcq_config/internal/dao"
 	"github.com/lj1570693659/gfcq_config/internal/library"
+	"github.com/lj1570693659/gfcq_config/internal/model/do"
 	"github.com/lj1570693659/gfcq_config/internal/model/entity"
 	service "github.com/lj1570693659/gfcq_config/internal/service/product"
 	v1 "github.com/lj1570693659/gfcq_protoc/config/product/v1"
@@ -117,9 +120,9 @@ func (s *sType) GetOneByCondition(ctx context.Context, condition g.Map) (*entity
 	return info, err
 }
 
-func (s *sType) checkInputData(ctx context.Context, in *v1.ModeInfo) (*v1.ModeInfo, error) {
+func (s *sType) checkInputData(ctx context.Context, in *v1.TypeInfo) (*v1.TypeInfo, error) {
 	if len(in.GetName()) == 0 {
-		return in, errors.New("研发模式不能为空")
+		return in, errors.New("项目类型不能为空")
 	}
 
 	// 评价权重和不能大于1
@@ -139,4 +142,81 @@ func (s *sType) checkInputData(ctx context.Context, in *v1.ModeInfo) (*v1.ModeIn
 	}
 
 	return in, nil
+}
+
+func (s *sType) Create(ctx context.Context, in *v1.CreateTypeReq) (*v1.CreateTypeRes, error) {
+	res := &v1.CreateTypeRes{
+		Type: &v1.TypeInfo{},
+	}
+	if _, err := s.checkInputData(ctx, &v1.TypeInfo{
+		Name:   in.GetName(),
+		Remark: in.Remark,
+	}); err != nil {
+		return res, err
+	}
+
+	data := do.ProductType{}
+	input, _ := json.Marshal(in)
+	err := json.Unmarshal(input, &data)
+	if err != nil {
+		return res, err
+	}
+
+	data.CreateTime = gtime.Now()
+	data.UpdateTime = gtime.Now()
+	lastInsertId, err := dao.ProductType.Ctx(ctx).Data(data).InsertAndGetId()
+	if err != nil {
+		return res, err
+	}
+
+	res.Type.Id = gconv.Int32(lastInsertId)
+	return res, nil
+}
+
+func (s *sType) Modify(ctx context.Context, in *v1.ModifyTypeReq) (*v1.ModifyTypeRes, error) {
+	res := &v1.ModifyTypeRes{Type: &v1.TypeInfo{}}
+	if g.IsEmpty(in.GetId()) {
+		return res, errors.New("编辑信息对象不能为空")
+	}
+
+	// 输入数据校验
+	info := &v1.TypeInfo{}
+	inputByte, _ := json.Marshal(in)
+	json.Unmarshal(inputByte, &info)
+	if _, err := s.checkInputData(ctx, info); err != nil {
+		return res, err
+	}
+
+	data := do.ProductType{}
+	input, _ := json.Marshal(in)
+	err := json.Unmarshal(input, &data)
+	if err != nil {
+		return res, err
+	}
+	data.UpdateTime = gtime.Now()
+	_, err = dao.ProductType.Ctx(ctx).Where(dao.ProductMode.Columns().Id, in.GetId()).Data(data).Update()
+	if err != nil {
+		return res, err
+	}
+
+	res.Type = info
+	return res, nil
+}
+
+func (s *sType) Delete(ctx context.Context, id int32) (isSuccess bool, msg string, err error) {
+	if g.IsEmpty(id) {
+		return false, "当前操作的数据有误，请联系相关维护人员", errors.New("接收到的ID数据为空")
+	}
+
+	// 校验修改的原始数据是否存在
+	info, err := s.GetOne(ctx, &v1.GetOneTypeReq{Type: &v1.TypeInfo{Id: id}})
+	if (err != nil && err.Error() == sql.ErrNoRows.Error()) || info == nil {
+		return false, "当前数据不存在，请联系相关维护人员", errors.New("接收到的ID在数据库中没有对应数据")
+	}
+
+	_, err = dao.ProductType.Ctx(ctx).Where(dao.ProductMode.Columns().Id, id).Delete()
+	if err != nil {
+		return false, "删除等级评估配置数据失败，请联系相关维护人员", err
+	}
+	return true, "", nil
 }

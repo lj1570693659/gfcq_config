@@ -192,15 +192,15 @@ func (s *sLevelConfirm) checkInputData(ctx context.Context, in *v1.LevelConfirmI
 	}
 
 	if in.GetScoreMin() < 0 {
-		return in, errors.New("得分下限不能小于0")
+		return in, errors.New("评分下限不能小于0")
 	}
 
 	if in.GetScoreMax() < 0 || in.GetScoreMax() > 100 {
-		return in, errors.New("得分上限不能小于0，且不能大于100")
+		return in, errors.New("评分上限不能小于0，且不能大于100")
 	}
 
-	if in.GetScoreRange() != consts.ScoreRangeMin && in.GetScoreRange() != consts.ScoreRangeMax {
-		return in, errors.New("得分区间包含关系错误")
+	if in.GetScoreRange() != consts.ScoreRangeMin && in.GetScoreRange() != consts.ScoreRangeMax && in.GetScoreRange() != consts.ScoreRangeMinMax {
+		return in, errors.New("评分区间包含关系错误")
 	}
 	if in.GetIsNeedPm() != consts.IsNeedPm && in.GetIsNeedPm() != consts.IsNotNeedPm {
 		return in, errors.New("是否委派项目经理数据错误")

@@ -33,3 +33,18 @@ func (s *TypeController) GetOne(ctx context.Context, in *v1.GetOneTypeReq) (*v1.
 	res, err := service.Type().GetOne(ctx, in)
 	return res, err
 }
+func (s *TypeController) Create(ctx context.Context, in *v1.CreateTypeReq) (*v1.CreateTypeRes, error) {
+	res, err := service.Type().Create(ctx, in)
+	return res, err
+}
+func (s *TypeController) Modify(ctx context.Context, in *v1.ModifyTypeReq) (*v1.ModifyTypeRes, error) {
+	res, err := service.Type().Modify(ctx, in)
+	return res, err
+}
+func (s *TypeController) Delete(ctx context.Context, in *v1.DeleteTypeReq) (*v1.DeleteTypeRes, error) {
+	isSuccess, msg, err := service.Type().Delete(ctx, in.GetId())
+	return &v1.DeleteTypeRes{
+		IsSuccess: isSuccess,
+		Msg:       msg,
+	}, err
+}

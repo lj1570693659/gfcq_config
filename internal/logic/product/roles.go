@@ -57,7 +57,7 @@ func (s *sRoles) Create(ctx context.Context, in *v1.CreateRolesReq) (*v1.CreateR
 }
 
 func (s *sRoles) GetOne(ctx context.Context, in *v1.GetOneRolesReq) (*v1.GetOneRolesRes, error) {
-	var info *v1.RolesInfo
+	info := &v1.RolesInfo{}
 	query := dao.ProductRoles.Ctx(ctx)
 
 	// 角色名称
@@ -199,21 +199,24 @@ func (s *sRoles) Delete(ctx context.Context, id int32) (isSuccess bool, msg stri
 
 	// 校验修改的原始数据是否存在
 	info, err := s.GetOne(ctx, &v1.GetOneRolesReq{Roles: &v1.RolesInfo{Id: id}})
-	if (err != nil && err == sql.ErrNoRows) || (!g.IsNil(info) && g.IsEmpty(info.Roles.Id)) {
+	if (err != nil && err.Error() == sql.ErrNoRows.Error()) || (!g.IsNil(info) && g.IsEmpty(info.Roles.Id)) {
 		return false, "当前数据不存在，请联系相关维护人员", errors.New("接收到的ID在数据库中没有对应数据")
 	}
 
+	fmt.Println("info-----44444444444444-----------", info)
 	// 删除父级数据时检查子级数据是否删除完全
 	if g.IsEmpty(info.Roles.GetPid()) {
 		info, err := s.GetOne(ctx, &v1.GetOneRolesReq{Roles: &v1.RolesInfo{Pid: id}})
-		if err != nil && err != sql.ErrNoRows {
+		fmt.Println("info-----33333-----------", info)
+		if err != nil && err.Error() != sql.ErrNoRows.Error() {
 			return false, err.Error(), err
 		}
 		if !g.IsNil(info) && !g.IsEmpty(info.Roles.Id) {
+			fmt.Println("info-----111111111-----------", info)
 			return false, "请先删除下级元素", errors.New("存在下级元素未删除完全")
 		}
 	}
-
+	fmt.Println("info-----2222222222-----------", info)
 	_, err = dao.ProductRoles.Ctx(ctx).Where(dao.ProductRoles.Columns().Id, id).Delete()
 	if err != nil {
 		return false, "删除等级评估配置数据失败，请联系相关维护人员", err
