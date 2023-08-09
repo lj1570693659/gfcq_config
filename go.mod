@@ -4,10 +4,9 @@ go 1.18
 
 require (
 	github.com/gogf/gf/contrib/drivers/mysql/v2 v2.4.4
-	github.com/gogf/gf/contrib/registry/etcd/v2 v2.5.1
 	github.com/gogf/gf/contrib/rpc/grpcx/v2 v2.4.4
 	github.com/gogf/gf/v2 v2.5.1
-	github.com/lj1570693659/gfcq_protoc v0.0.0-20230731090821-2ec86e09baea
+	github.com/lj1570693659/gfcq_protoc v0.0.0-20230809071228-81e45b01a842
 	go.etcd.io/etcd/client/v3 v3.5.4
 	google.golang.org/grpc v1.56.1
 )

@@ -1,10 +1,12 @@
 package product
 
-import v1 "github.com/lj1570693659/gfcq_protoc/config/product/v1"
+import (
+	v1 "github.com/lj1570693659/gfcq_protoc/config/product/v1"
+	"google.golang.org/grpc"
+)
 
 import (
 	"context"
-	"github.com/gogf/gf/contrib/rpc/grpcx/v2"
 	service "github.com/lj1570693659/gfcq_config/internal/service/product"
 )
 
@@ -13,8 +15,8 @@ type TypeController struct {
 	v1.UnimplementedTypeServer
 }
 
-func TypeRegister(s *grpcx.GrpcServer) {
-	v1.RegisterTypeServer(s.Server, &TypeController{})
+func TypeRegister(s *grpc.Server) {
+	v1.RegisterTypeServer(s, &TypeController{})
 }
 
 // GetList implements GetList

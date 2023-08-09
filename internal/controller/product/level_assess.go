@@ -2,9 +2,9 @@ package product
 
 import (
 	"context"
-	"github.com/gogf/gf/contrib/rpc/grpcx/v2"
 	"github.com/lj1570693659/gfcq_config/internal/service/product"
 	v1 "github.com/lj1570693659/gfcq_protoc/config/product/v1"
+	"google.golang.org/grpc"
 )
 
 // LevelAssessController 项目等级评估配置信息
@@ -13,8 +13,8 @@ type LevelAssessController struct {
 }
 
 // LevelAssessRegister 项目等级评估配置信息
-func LevelAssessRegister(s *grpcx.GrpcServer) {
-	v1.RegisterLevelAssessServer(s.Server, &LevelAssessController{})
+func LevelAssessRegister(s *grpc.Server) {
+	v1.RegisterLevelAssessServer(s, &LevelAssessController{})
 }
 
 // GetList implements GetList

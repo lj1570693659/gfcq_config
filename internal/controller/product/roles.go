@@ -2,9 +2,9 @@ package product
 
 import (
 	"context"
-	"github.com/gogf/gf/contrib/rpc/grpcx/v2"
 	service "github.com/lj1570693659/gfcq_config/internal/service/product"
 	v1 "github.com/lj1570693659/gfcq_protoc/config/product/v1"
+	"google.golang.org/grpc"
 )
 
 // RolesController 项目角色配置信息
@@ -12,8 +12,8 @@ type RolesController struct {
 	v1.UnimplementedRolesServer
 }
 
-func RolesRegister(s *grpcx.GrpcServer) {
-	v1.RegisterRolesServer(s.Server, &RolesController{})
+func RolesRegister(s *grpc.Server) {
+	v1.RegisterRolesServer(s, &RolesController{})
 }
 
 // GetList implements GetList

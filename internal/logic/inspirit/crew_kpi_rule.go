@@ -30,9 +30,12 @@ func (s *sCrewKpiRule) Create(ctx context.Context, in *v1.CreateCrewKpiRuleReq) 
 		CrewKpiRule: &v1.CrewKpiRuleInfo{},
 	}
 	if _, err := s.checkInputData(ctx, &v1.CrewKpiRuleInfo{
-		Redio:     in.GetRedio(),
-		LevelName: in.GetLevelName(),
-		Remark:    in.GetRemark(),
+		ScoreMin:   in.GetScoreMin(),
+		ScoreMax:   in.GetScoreMax(),
+		ScoreRange: in.GetScoreRange(),
+		Redio:      in.GetRedio(),
+		LevelName:  in.GetLevelName(),
+		Remark:     in.GetRemark(),
 	}); err != nil {
 		return res, err
 	}
@@ -209,10 +212,15 @@ func (s *sCrewKpiRule) checkInputData(ctx context.Context, in *v1.CrewKpiRuleInf
 	if in.GetRedio() < 0 {
 		return in, errors.New("绩效比例不能小于0")
 	}
-	if in.GetRedio() > 1 {
-		return in, errors.New("绩效比例不能大于1")
+	if in.GetScoreMin() < 0 {
+		return in, errors.New("绩效得分下限不能小于0")
 	}
-
+	if in.GetScoreMax() < 1 {
+		return in, errors.New("绩效得分上限不能小于1")
+	}
+	if in.GetScoreMin() > in.GetScoreMax() {
+		return in, errors.New("绩效得分下限不能超过上限")
+	}
 	condition := g.Map{
 		fmt.Sprintf("%s = ?", dao.CrewKpiRule.Columns().LevelName): in.GetLevelName(),
 	}

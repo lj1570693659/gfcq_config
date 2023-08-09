@@ -2,9 +2,9 @@ package product
 
 import (
 	"context"
-	"github.com/gogf/gf/contrib/rpc/grpcx/v2"
 	service "github.com/lj1570693659/gfcq_config/internal/service/product"
 	v1 "github.com/lj1570693659/gfcq_protoc/config/product/v1"
+	"google.golang.org/grpc"
 )
 
 // ModeController 项目开发模式信息
@@ -12,8 +12,8 @@ type ModeController struct {
 	v1.UnimplementedModeServer
 }
 
-func ModeRegister(s *grpcx.GrpcServer) {
-	v1.RegisterModeServer(s.Server, &ModeController{})
+func ModeRegister(s *grpc.Server) {
+	v1.RegisterModeServer(s, &ModeController{})
 }
 
 // GetList implements GetList

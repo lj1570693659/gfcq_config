@@ -2,9 +2,9 @@ package product
 
 import (
 	"context"
-	"github.com/gogf/gf/contrib/rpc/grpcx/v2"
 	service "github.com/lj1570693659/gfcq_config/internal/service/product"
 	v1 "github.com/lj1570693659/gfcq_protoc/config/product/v1"
+	"google.golang.org/grpc"
 )
 
 // LevelConfirmController 项目优先级确认配置信息
@@ -12,8 +12,8 @@ type LevelConfirmController struct {
 	v1.UnimplementedLevelConfirmServer
 }
 
-func LevelConfirmRegister(s *grpcx.GrpcServer) {
-	v1.RegisterLevelConfirmServer(s.Server, &LevelConfirmController{})
+func LevelConfirmRegister(s *grpc.Server) {
+	v1.RegisterLevelConfirmServer(s, &LevelConfirmController{})
 }
 
 // GetList implements GetList

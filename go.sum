@@ -60,8 +60,6 @@ github.com/go-stack/stack v1.8.0/go.mod h1:v0f6uXyyMGvRgIKkXu+yp6POWl0qKG85gN/me
 github.com/godbus/dbus/v5 v5.0.4/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5xrFpKfA=
 github.com/gogf/gf/contrib/drivers/mysql/v2 v2.4.4 h1:gJCL60M9r7RWVQGjvOGkusRXz7uYDYDfCWnswwvvAj8=
 github.com/gogf/gf/contrib/drivers/mysql/v2 v2.4.4/go.mod h1:z9D1xkC9x8o9Q/y+rmK6WhiCfoYwcJ8WocTUI4X7Xpg=
-github.com/gogf/gf/contrib/registry/etcd/v2 v2.5.1 h1:cnSs/ikm3NG1Kokf8mkywzl80SbSYwRmRWSOIYZqxbk=
-github.com/gogf/gf/contrib/registry/etcd/v2 v2.5.1/go.mod h1:Gs+RcJRqGmgI8BLpcZMOu+gkSVov7DA9rynMiIo7HgU=
 github.com/gogf/gf/contrib/registry/file/v2 v2.4.4 h1:EWeydISMrrv5nL10BsUR8xKH0ldpg38LxPnE++yB3BY=
 github.com/gogf/gf/contrib/registry/file/v2 v2.4.4/go.mod h1:XTrtr3ppcB5TFi5wxaE4cd7UItPDBS3pmSq/qwQZCUg=
 github.com/gogf/gf/contrib/rpc/grpcx/v2 v2.4.4 h1:q8p+t53tDr85PR55F0rkaoXcJHMIdbLf8B+yTjqBx7o=
@@ -125,8 +123,8 @@ github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORN
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0 h1:45sCR5RtlFHMR4UwH9sdQ5TC8v0qDQCHnXt+kaKSTVE=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
-github.com/lj1570693659/gfcq_protoc v0.0.0-20230731090821-2ec86e09baea h1:TkuBeBnyFI+yVoy/qBVvwAOBlLpiQxCTfXIHm1euY8U=
-github.com/lj1570693659/gfcq_protoc v0.0.0-20230731090821-2ec86e09baea/go.mod h1:TkvxowyGm/JrfkwHOR96Tba0YJ+jR58DXIDF8BZ9+oI=
+github.com/lj1570693659/gfcq_protoc v0.0.0-20230809071228-81e45b01a842 h1:cI5TuvFvpzAQrwFjyHASc0M5swi+bwUdLdLeTRdo7oU=
+github.com/lj1570693659/gfcq_protoc v0.0.0-20230809071228-81e45b01a842/go.mod h1:TkvxowyGm/JrfkwHOR96Tba0YJ+jR58DXIDF8BZ9+oI=
 github.com/magiconair/properties v1.8.6 h1:5ibWZ6iY0NctNGWo87LalDlEZ6R41TqbbDamhfG/Qzo=
 github.com/magiconair/properties v1.8.6/go.mod h1:y3VJvCyxH9uVvJTWEGAELF3aiYNyPKd5NZ3oSwXrF60=
 github.com/mattn/go-colorable v0.1.9 h1:sqDoxXbdeALODt0DAeJCVp38ps9ZogZEAXjus69YV3U=

@@ -2,9 +2,9 @@ package inspirit
 
 import (
 	"context"
-	"github.com/gogf/gf/contrib/rpc/grpcx/v2"
 	service "github.com/lj1570693659/gfcq_config/internal/service/inspirit"
 	v1 "github.com/lj1570693659/gfcq_protoc/config/inspirit/v1"
+	"google.golang.org/grpc"
 )
 
 // CrewDutyIndexController 项目得分-预算额度配置信息（激励预算）
@@ -13,8 +13,8 @@ type CrewDutyIndexController struct {
 }
 
 // CrewDutyIndexRegister 项目等级评估配置信息
-func CrewDutyIndexRegister(s *grpcx.GrpcServer) {
-	v1.RegisterCrewDutyIndexServer(s.Server, &CrewDutyIndexController{})
+func CrewDutyIndexRegister(s *grpc.Server) {
+	v1.RegisterCrewDutyIndexServer(s, &CrewDutyIndexController{})
 }
 
 // GetList implements GetList

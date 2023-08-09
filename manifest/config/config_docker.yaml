@@ -9,10 +9,10 @@ grpc:
   errorLogPattern: "error-{Ymd}.log"
   accessLogEnabled: true
   accessLogPattern: "access-{Ymd}.log"
-  etcdLink: "127.0.0.1:9080"
+  etcdLink: ":9080"
   organize:
     name: "organize"
-    link: "127.0.0.1:9091"
+    link: "172.17.0.4:9090"
 
 # Global logging.
 logger:
@@ -27,7 +27,7 @@ database:
     stdout: true
 
   default:
-    link: "mysql:root:123456@tcp(127.0.0.1:3306)/cqgf_product"
+    link: "mysql:root:123456@tcp(172.17.0.2:3306)/cqgf_product"
     debug: true
 
 

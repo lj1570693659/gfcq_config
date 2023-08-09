@@ -2,9 +2,9 @@ package inspirit
 
 import (
 	"context"
-	"github.com/gogf/gf/contrib/rpc/grpcx/v2"
 	service "github.com/lj1570693659/gfcq_config/internal/service/inspirit"
 	v1 "github.com/lj1570693659/gfcq_protoc/config/inspirit/v1"
+	"google.golang.org/grpc"
 )
 
 // CrewKpiRuleController 团队成员绩效等级配置信息
@@ -13,8 +13,8 @@ type CrewKpiRuleController struct {
 }
 
 // CrewKpiRuleRegister 项目等级评估配置信息
-func CrewKpiRuleRegister(s *grpcx.GrpcServer) {
-	v1.RegisterCrewKpiRuleServer(s.Server, &CrewKpiRuleController{})
+func CrewKpiRuleRegister(s *grpc.Server) {
+	v1.RegisterCrewKpiRuleServer(s, &CrewKpiRuleController{})
 }
 
 // GetList implements GetList

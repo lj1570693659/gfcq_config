@@ -2,9 +2,9 @@ package inspirit
 
 import (
 	"context"
-	"github.com/gogf/gf/contrib/rpc/grpcx/v2"
 	service "github.com/lj1570693659/gfcq_config/internal/service/inspirit"
 	v1 "github.com/lj1570693659/gfcq_protoc/config/inspirit/v1"
+	"google.golang.org/grpc"
 )
 
 // CrewOvertimeRuleController 项目组成员浮动贡献-加班贡献配置信息
@@ -13,8 +13,8 @@ type CrewOvertimeRuleController struct {
 }
 
 // CrewOvertimeRuleRegister 项目等级评估配置信息
-func CrewOvertimeRuleRegister(s *grpcx.GrpcServer) {
-	v1.RegisterCrewOvertimeRuleServer(s.Server, &CrewOvertimeRuleController{})
+func CrewOvertimeRuleRegister(s *grpc.Server) {
+	v1.RegisterCrewOvertimeRuleServer(s, &CrewOvertimeRuleController{})
 }
 
 // GetList implements GetList

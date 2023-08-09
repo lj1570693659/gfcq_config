@@ -2,9 +2,9 @@ package inspirit
 
 import (
 	"context"
-	"github.com/gogf/gf/contrib/rpc/grpcx/v2"
 	service "github.com/lj1570693659/gfcq_config/internal/service/inspirit"
 	v1 "github.com/lj1570693659/gfcq_protoc/config/inspirit/v1"
+	"google.golang.org/grpc"
 )
 
 // ProductStageRadioController 项目阶段应发激励占比配置信息
@@ -13,8 +13,8 @@ type ProductStageRadioController struct {
 }
 
 // ProductStageRadioRegister 项目等级评估配置信息
-func ProductStageRadioRegister(s *grpcx.GrpcServer) {
-	v1.RegisterStageRadioServer(s.Server, &ProductStageRadioController{})
+func ProductStageRadioRegister(s *grpc.Server) {
+	v1.RegisterStageRadioServer(s, &ProductStageRadioController{})
 }
 
 // GetList implements GetList

@@ -2,9 +2,9 @@ package inspirit
 
 import (
 	"context"
-	"github.com/gogf/gf/contrib/rpc/grpcx/v2"
 	service "github.com/lj1570693659/gfcq_config/internal/service/inspirit"
 	v1 "github.com/lj1570693659/gfcq_protoc/config/inspirit/v1"
+	"google.golang.org/grpc"
 )
 
 // CrewHoursIndexController 团队成员工时指数配置信息
@@ -13,8 +13,8 @@ type CrewHoursIndexController struct {
 }
 
 // CrewHoursIndexRegister 项目等级评估配置信息
-func CrewHoursIndexRegister(s *grpcx.GrpcServer) {
-	v1.RegisterCrewHoursIndexServer(s.Server, &CrewHoursIndexController{})
+func CrewHoursIndexRegister(s *grpc.Server) {
+	v1.RegisterCrewHoursIndexServer(s, &CrewHoursIndexController{})
 }
 
 // GetList implements GetList

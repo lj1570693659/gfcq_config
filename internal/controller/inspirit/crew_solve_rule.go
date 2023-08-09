@@ -2,9 +2,9 @@ package inspirit
 
 import (
 	"context"
-	"github.com/gogf/gf/contrib/rpc/grpcx/v2"
 	service "github.com/lj1570693659/gfcq_config/internal/service/inspirit"
 	v1 "github.com/lj1570693659/gfcq_protoc/config/inspirit/v1"
+	"google.golang.org/grpc"
 )
 
 // CrewSolveRuleController 团队成员浮动贡献-解决问题贡献配置信息
@@ -13,8 +13,8 @@ type CrewSolveRuleController struct {
 }
 
 // CrewSolveRuleRegister 项目等级评估配置信息
-func CrewSolveRuleRegister(s *grpcx.GrpcServer) {
-	v1.RegisterCrewSolveRuleServer(s.Server, &CrewSolveRuleController{})
+func CrewSolveRuleRegister(s *grpc.Server) {
+	v1.RegisterCrewSolveRuleServer(s, &CrewSolveRuleController{})
 }
 
 // GetList implements GetList
