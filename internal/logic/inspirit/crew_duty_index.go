@@ -151,7 +151,7 @@ func (s *sCrewDutyIndex) GetAll(ctx context.Context, in *v1.GetAllCrewDutyIndexR
 		query = query.Where(fmt.Sprintf("%s like ?", dao.CrewDutyIndex.Columns().Remark), g.Slice{fmt.Sprintf("%s%s", in.GetCrewDutyIndex().GetRemark(), "%")})
 	}
 
-	err := query.Scan(&budgetEntity)
+	err := query.OrderAsc(dao.CrewDutyIndex.Columns().ScoreIndex).Scan(&budgetEntity)
 	if len(budgetEntity) > 0 {
 		for _, v := range budgetEntity {
 			resData = append(resData, &v1.CrewDutyIndexInfo{

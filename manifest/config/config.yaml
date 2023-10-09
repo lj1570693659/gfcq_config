@@ -1,6 +1,6 @@
 # GRPC Server.
 grpc:
-  address: ":9080"
+  address: ":9081"
   name: "gfcq_config"
   logPath: "/tmp/log/"
   logStdout: true
@@ -9,7 +9,7 @@ grpc:
   errorLogPattern: "error-{Ymd}.log"
   accessLogEnabled: true
   accessLogPattern: "access-{Ymd}.log"
-  etcdLink: "127.0.0.1:9080"
+  etcdLink: "127.0.0.1:9081"
   organize:
     name: "organize"
     link: "127.0.0.1:9091"
@@ -27,7 +27,7 @@ database:
     stdout: true
 
   default:
-    link: "mysql:root:123456@tcp(127.0.0.1:3306)/cqgf_product"
+    link: "mysql:root:123456@tcp(127.0.0.1:3807)/cqgf_product?loc=Local"
     debug: true
 
 

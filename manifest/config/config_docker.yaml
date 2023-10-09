@@ -12,7 +12,7 @@ grpc:
   etcdLink: ":9080"
   organize:
     name: "organize"
-    link: "172.17.0.4:9090"
+    link: "172.25.0.2:9090"
 
 # Global logging.
 logger:
@@ -27,7 +27,7 @@ database:
     stdout: true
 
   default:
-    link: "mysql:root:123456@tcp(172.17.0.2:3306)/cqgf_product"
+    link: "mysql:root:123456@tcp(172.25.0.5:3306)/cqgf_product"
     debug: true
 
 
